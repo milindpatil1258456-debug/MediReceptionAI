@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MediReception AI — Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="admin-header">
+<button
+    class="mobile-menu-button"
+    onclick="toggleSidebar()"
+    aria-label="Open menu"
+>
+    ☰
+</button>
+    <div class="header-left">
+
+        <div class="brand-icon">
+            🏥
+        </div>
+
+        <div class="brand-info">
+            <h2>MediReception AI</h2>
+            <span>Hospital Management System</span>
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            System Online
+        </div>
+        <button
+    type="button"
+    class="notification-button"
+    id="notificationButton"
+    onclick="toggleNotifications()"
+    aria-label="Notifications"
+>
+    <span class="bell-icon">🔔</span>
+    <span
+        class="notification-badge"
+        id="notificationBadge"
+    >3</span>
+</button>
+<!-- GLOBAL SEARCH -->
+
+<div class="global-search">
+
+    <span class="search-icon">
+        🔎
+    </span>
+
+    <input
+        id="globalSearch"
+        type="search"
+        placeholder="Search doctors, departments..."
+        autocomplete="off"
+        oninput="globalSearch()"
+    >
+
+    <button
+        class="search-clear"
+        id="searchClear"
+        onclick="clearGlobalSearch()"
+        type="button"
+    >
+        ×
+    </button>
+
+</div>
+<!-- NOTIFICATION CENTER -->
+
+<div class="notification-wrapper">
+
+<button
+    id="testNotification"
+    type="button"
+    style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        position:relative;
+        width:42px;
+        height:42px;
+        background:white;
+        color:#172033;
+        border:2px solid #2563eb;
+        border-radius:10px;
+        font-size:22px;
+        z-index:99999;
+        opacity:1;
+        visibility:visible;
+    "
+>
+    🔔
+    
+    <span
+        style="
+            position:absolute;
+            top:-7px;
+            right:-7px;
+            width:19px;
+            height:19px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:red;
+            color:white;
+            border:2px solid white;
+            border-radius:50%;
+            font-size:10px;
+            font-weight:bold;
+        "
+    >3</span>
+</button>
+
+
+    <div
+        id="notificationPanel"
+        class="notification-panel"
+    >
+
+        <div class="notification-header">
+
+            <div>
+
+                <strong>
+                    Notifications
+                </strong>
+
+                <span>
+                    Hospital updates
+                </span>
+
+            </div>
+
+            <button
+                onclick="clearNotifications()"
+                class="clear-notifications"
+            >
+                Clear
+            </button>
+
+        </div>
+
+
+        <div
+            id="notificationList"
+            class="notification-list"
+        >
+
+            <div class="notification-item">
+
+                <div class="notification-icon appointment">
+                    📅
+                </div>
+
+                <div>
+
+                    <strong>
+                        New appointment request
+                    </strong>
+
+                    <p>
+                        Demo Patient requested an appointment.
+                    </p>
+
+                    <small>
+                        Just now
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="notification-item">
+
+                <div class="notification-icon ai">
+                    🤖
+                </div>
+
+                <div>
+
+                    <strong>
+                        AI Receptionist Online
+                    </strong>
+
+                    <p>
+                        MediReception AI is ready to assist patients.
+                    </p>
+
+                    <small>
+                        5 minutes ago
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="notification-item">
+
+                <div class="notification-icon system">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        System check completed
+                    </strong>
+
+                    <p>
+                        All dashboard systems are operating normally.
+                    </p>
+
+                    <small>
+                        10 minutes ago
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="notification-footer">
+
+            <span>
+                🟢 All systems operational
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+        <div class="admin-profile">
+
+            <div class="profile-avatar">
+                HA
+            </div>
+
+            <div class="profile-info">
+                <strong>Hospital Admin</strong>
+                <span>Administrator</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<div class="dashboard">
+
+
+    <aside class="sidebar">
+<div class="mobile-sidebar-header">
+
+    <strong>
+        Hospital Menu
+    </strong>
+
+    <button
+        onclick="closeSidebar()"
+        aria-label="Close menu"
+    >
+        ×
+    </button>
+
+</div>
+        <button
+            class="nav-item active"
+            onclick="showSection('overview', this)"
+        >
+            📊 Overview
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="showSection('appointments', this)"
+        >
+            📅 Appointments
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="showSection('doctors', this)"
+        >
+            👨‍⚕️ Doctors
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="showSection('departments', this)"
+        >
+            🏥 Departments
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="showSection('faqs', this)"
+        >
+            💬 AI Knowledge
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="showSection('settings', this)"
+        >
+            ⚙️ Settings
+        </button>
+
+    </aside>
+
+
+    <main class="content">
+
+
+        <h1 id="pageTitle">
+            Dashboard Overview
+        </h1>
+
+
+<!-- OVERVIEW -->
+
+<section
+    id="overview"
+    class="dashboard-section active-section"
+>
+
+    <!-- WELCOME BANNER -->
+
+    <div class="welcome-banner">
+
+        <div>
+
+            <span class="welcome-label">
+                ADMIN DASHBOARD
+            </span>
+
+            <h2>
+                Welcome back, Hospital Admin 👋
+            </h2>
+
+            <p>
+                Here's what's happening across your hospital today.
+            </p>
+
+        </div>
+
+        <div class="welcome-icon">
+            🏥
+        </div>
+
+    </div>
+
+
+    <!-- KPI CARDS -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-icon">📅</span>
+
+                <span class="stat-trend">
+                    Live
+                </span>
+            </div>
+
+            <h3 id="appointmentCount">0</h3>
+
+            <p>
+                Appointment Requests
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-icon">👨‍⚕️</span>
+
+                <span class="stat-trend">
+                    Active
+                </span>
+            </div>
+
+            <h3>
+                4
+            </h3>
+
+            <p>
+                Doctors
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-icon">🏥</span>
+
+                <span class="stat-trend">
+                    Open
+                </span>
+            </div>
+
+            <h3>
+                6
+            </h3>
+
+            <p>
+                Departments
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-icon">🤖</span>
+
+                <span class="stat-trend online">
+                    Online
+                </span>
+            </div>
+
+            <h3>
+                99.9%
+            </h3>
+
+            <p>
+                AI Assistant Status
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- TWO COLUMN AREA -->
+
+    <div class="overview-grid">
+
+
+        <!-- RECENT APPOINTMENTS -->
+
+        <div class="panel overview-panel">
+
+            <div class="panel-heading">
+
+                <div>
+                    <h2>Recent Appointments</h2>
+
+                    <span>
+                        Latest patient requests
+                    </span>
+                </div>
+
+                <span class="panel-icon">
+                    📅
+                </span>
+
+            </div>
+
+            <div id="recentAppointments"></div>
+
+        </div>
+
+
+        <!-- AI STATUS -->
+
+        <div class="panel ai-panel">
+
+            <div class="panel-heading">
+
+                <div>
+                    <h2>AI Assistant</h2>
+
+                    <span>
+                        MediReception AI status
+                    </span>
+                </div>
+
+                <span class="panel-icon">
+                    🤖
+                </span>
+
+            </div>
+
+
+            <div class="ai-status-box">
+
+                <div class="ai-circle">
+                    🤖
+                </div>
+
+                <div>
+
+                    <strong>
+                        AI Receptionist Online
+                    </strong>
+
+                    <p>
+                        Ready to assist patients
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-metrics">
+
+                <div>
+                    <strong>24/7</strong>
+                    <span>Availability</span>
+                </div>
+
+                <div>
+                    <strong>Fast</strong>
+                    <span>Response</span>
+                </div>
+
+                <div>
+                    <strong>AI</strong>
+                    <span>Powered</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="panel quick-actions-panel">
+
+        <div class="panel-heading">
+
+            <div>
+                <h2>Quick Actions</h2>
+
+                <span>
+                    Manage your hospital quickly
+                </span>
+            </div>
+
+            <span class="panel-icon">
+                ⚡
+            </span>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+            <button
+                onclick="showSection('appointments', document.querySelectorAll('.nav-item')[1])"
+            >
+                <span>📅</span>
+                <div>
+                    <strong>Appointments</strong>
+                    <small>Manage requests</small>
+                </div>
+            </button>
+
+
+            <button
+                onclick="showSection('doctors', document.querySelectorAll('.nav-item')[2])"
+            >
+                <span>👨‍⚕️</span>
+                <div>
+                    <strong>Doctors</strong>
+                    <small>View medical team</small>
+                </div>
+            </button>
+
+
+            <button
+                onclick="showSection('departments', document.querySelectorAll('.nav-item')[3])"
+            >
+                <span>🏥</span>
+                <div>
+                    <strong>Departments</strong>
+                    <small>Hospital services</small>
+                </div>
+            </button>
+
+
+            <button
+                onclick="showSection('faqs', document.querySelectorAll('.nav-item')[4])"
+            >
+                <span>🤖</span>
+                <div>
+                    <strong>AI Knowledge</strong>
+                    <small>Manage AI information</small>
+                </div>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- APPOINTMENTS -->
+
+<section
+    id="appointments"
+    class="dashboard-section"
+>
+
+    <div class="panel appointments-panel">
+
+        <div class="panel-heading">
+
+            <div>
+                <h2>Appointment Requests</h2>
+
+                <span>
+                    Review and manage patient appointments
+                </span>
+            </div>
+
+            <span class="panel-icon">
+                📅
+            </span>
+
+        </div>
+
+
+        <!-- APPOINTMENT SUMMARY -->
+
+        <div class="appointment-summary">
+
+            <div class="summary-item">
+                <span>📋</span>
+                <div>
+                    <strong id="totalAppointments">0</strong>
+                    <small>Total Requests</small>
+                </div>
+            </div>
+
+            <div class="summary-item">
+                <span>⏳</span>
+                <div>
+                    <strong id="pendingAppointments">0</strong>
+                    <small>Pending</small>
+                </div>
+            </div>
+
+            <div class="summary-item">
+                <span>✓</span>
+                <div>
+                    <strong id="confirmedAppointments">0</strong>
+                    <small>Confirmed</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-container">
+
+            <table class="appointments-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Patient</th>
+
+                        <th>Department</th>
+
+                        <th>Date</th>
+
+                        <th>Time</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="appointmentTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <!-- DOCTORS -->
+
+        <section
+            id="doctors"
+            class="dashboard-section"
+        >
+
+            <div class="panel">
+
+                <h2>Doctors</h2>
+
+                <div
+                    id="doctorGrid"
+                    class="card-grid"
+                ></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DEPARTMENTS -->
+
+        <section
+            id="departments"
+            class="dashboard-section"
+        >
+
+            <div class="panel">
+
+                <h2>Departments</h2>
+
+                <div
+                    id="departmentGrid"
+                    class="card-grid"
+                ></div>
+
+            </div>
+
+        </section>
+
+<!-- AI KNOWLEDGE BASE -->
+
+<section
+    id="faqs"
+    class="dashboard-section"
+>
+
+    <!-- AI HEADER -->
+
+    <div class="ai-knowledge-header">
+
+        <div class="ai-header-content">
+
+            <div class="ai-large-icon">
+                🤖
+            </div>
+
+            <div>
+
+                <span class="ai-label">
+                    MEDIRECEPTION AI
+                </span>
+
+                <h2>
+                    AI Knowledge Center
+                </h2>
+
+                <p>
+                    Information available to the AI receptionist
+                    when assisting patients.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-live-status">
+
+            <span></span>
+
+            AI Online
+
+        </div>
+
+    </div>
+
+
+    <!-- KNOWLEDGE STATS -->
+
+    <div class="knowledge-stats">
+
+        <div class="knowledge-stat">
+
+            <span>🧠</span>
+
+            <div>
+                <strong id="knowledgeCount">
+                    5
+                </strong>
+
+                <small>
+                    Knowledge Entries
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="knowledge-stat">
+
+            <span>💬</span>
+
+            <div>
+                <strong>
+                    FAQ
+                </strong>
+
+                <small>
+                    Active Category
+                </small>
+            </div>
+
+        </div>
+
+
+        <div class="knowledge-stat">
+
+            <span>✓</span>
+
+            <div>
+                <strong>
+                    Active
+                </strong>
+
+                <small>
+                    Knowledge Status
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- KNOWLEDGE PANEL -->
+
+    <div class="panel knowledge-panel">
+
+        <div class="panel-heading">
+
+            <div>
+
+                <h2>
+                    Frequently Asked Questions
+                </h2>
+
+                <span>
+                    Information the AI can use to answer patients
+                </span>
+
+            </div>
+
+            <span class="panel-icon">
+                💬
+            </span>
+
+        </div>
+
+
+        <div
+            id="faqList"
+            class="faq-grid"
+        ></div>
+
+    </div>
+
+
+</section>
+
+
+
+
+    </main>
+
+</div>
+
+
+<script src="admin.js"></script>
+
+</body>
+
+</html>
