@@ -88,7 +88,64 @@ let appointmentData = {
     time: "",
     name: ""
 };
+/* =====================================================
+   SMART DOCTOR MATCHING
+   ===================================================== */
 
+function findDoctorsByDepartment(department) {
+
+    return hospitalData.doctors.filter(function (doctor) {
+
+        return doctor.department.toLowerCase() ===
+               department.toLowerCase();
+
+    });
+
+}
+
+
+function getDepartmentDoctorResponse(department) {
+
+    const doctors =
+        findDoctorsByDepartment(department);
+
+    if (doctors.length === 0) {
+
+        return `
+        <b>${department}</b><br><br>
+
+        I don't currently have a doctor listed for
+        this department in my hospital information.
+
+        <br><br>
+
+        Please contact the hospital reception team
+        for assistance.
+        `;
+
+    }
+
+    let response = `
+    <b>${department}</b><br><br>
+
+    Available doctor:
+    <br><br>
+    `;
+
+    doctors.forEach(function (doctor) {
+
+        response += `
+        <b>${doctor.name}</b><br>
+        ${doctor.department}<br>
+        ${doctor.availability}
+        <br><br>
+        `;
+
+    });
+
+    return response;
+
+}
 /* =====================================================
    AI RESPONSE ENGINE
    ===================================================== */
@@ -129,18 +186,87 @@ function generateResponse(text) {
 
         if (appointmentStep === "department") {
 
-            appointmentData.department = answer;
-            appointmentStep = "doctor";
+    const requestedDepartment = answer.toLowerCase();
 
-            return `
-            📅 <b>Appointment Request</b><br><br>
+    const matchedDepartment =
+        hospitalData.departments.find(function (department) {
 
-            Which doctor would you like to see?
-            <br><br>
+            return requestedDepartment.includes(
+                department.toLowerCase()
+            ) ||
+            department.toLowerCase().includes(
+                requestedDepartment
+            );
 
-            You can give me the doctor's name or say
-            "any available doctor".
-            `;
+        });
+
+
+    if (!matchedDepartment) {
+
+        return `
+        <b>Department not found</b><br><br>
+
+        I couldn't match that to one of our departments.
+
+        <br><br>
+
+        Available departments:
+        <br>
+        • ${hospitalData.departments.join("<br>• ")}
+
+        <br><br>
+
+        Please tell me which department you need.
+        `;
+
+    }
+
+
+    appointmentData.department = matchedDepartment;
+
+    const doctors =
+        findDoctorsByDepartment(matchedDepartment);
+
+
+    if (doctors.length === 0) {
+
+        appointmentStep = null;
+
+        return `
+        <b>${matchedDepartment}</b><br><br>
+
+        I don't currently have a doctor listed for
+        this department.
+
+        <br><br>
+
+        Please contact the hospital reception team
+        for assistance.
+        `;
+
+    }
+
+
+    appointmentStep = "doctor";
+
+
+    return `
+    <b>${matchedDepartment}</b><br><br>
+
+    Available doctor:
+    <br><br>
+
+    ${doctors.map(function (doctor) {
+
+        return `
+        <b>${doctor.name}</b><br>
+        ${doctor.availability}<br><br>
+        `;
+
+    }).join("")}
+
+    Which doctor would you like to see?
+    `;
 
         }
 
