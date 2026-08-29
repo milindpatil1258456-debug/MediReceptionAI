@@ -96,7 +96,29 @@ let appointmentData = {
 function generateResponse(text) {
 
     const message = text.toLowerCase().trim();
+/* =================================================
+       APPOINTMENT REQUEST
+       ================================================= */
 
+    if (
+        message.includes("appointment") ||
+        message.includes("book an appointment") ||
+        message.includes("schedule an appointment") ||
+        message.includes("book a doctor") ||
+        message.includes("see a doctor")
+    ) {
+
+        appointmentStep = "department";
+
+        return `
+        📅 <b>Appointment Request</b><br><br>
+
+        Sure! Which department would you like
+        to book an appointment for?
+        `;
+
+    }
+   
     /* =================================================
        APPOINTMENT CONVERSATION
        ================================================= */
@@ -366,29 +388,7 @@ function generateResponse(text) {
         `;
 
     }
-    /* =================================================
-       APPOINTMENT REQUEST
-       ================================================= */
-
-    if (
-        message.includes("appointment") ||
-        message.includes("book an appointment") ||
-        message.includes("schedule an appointment") ||
-        message.includes("book a doctor") ||
-        message.includes("see a doctor")
-    ) {
-
-        appointmentStep = "department";
-
-        return `
-        📅 <b>Appointment Request</b><br><br>
-
-        Sure! Which department would you like
-        to book an appointment for?
-        `;
-
-    }
-
+   
     /* DOCTORS */
 
     if (
