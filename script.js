@@ -184,7 +184,12 @@ function generateResponse(text) {
 
         const answer = text.trim();
 
-        if (appointmentStep === "department") {
+        
+    /* =================================================
+   DEPARTMENT → DOCTOR MATCHING
+   ================================================= */
+
+if (appointmentStep === "department") {
 
     const requestedDepartment = answer.toLowerCase();
 
@@ -242,8 +247,6 @@ function generateResponse(text) {
 
     appointmentData.department = matchedDepartment;
 
-    /* Automatically select the available doctor */
-
     appointmentData.doctor = doctors[0].name;
 
     appointmentStep = "doctor-confirmation";
@@ -264,31 +267,12 @@ function generateResponse(text) {
     Would you like to continue with this doctor?
     `;
 
-        }
-
-    appointmentData.department = matchedDepartment;
-
-    const doctors =
-        findDoctorsByDepartment(matchedDepartment);
+}
 
 
-    if (doctors.length === 0) {
-
-        appointmentStep = null;
-
-        return `
-        <b>${matchedDepartment}</b><br><br>
-
-        I don't currently have a doctor listed for
-        this department.
-
-        <br><br>
-
-        Please contact the hospital reception team
-        for assistance.
-        `;
-
-    }
+/* =================================================
+   DOCTOR CONFIRMATION
+   ================================================= */
 
 if (appointmentStep === "doctor-confirmation") {
 
@@ -331,29 +315,6 @@ if (appointmentStep === "doctor-confirmation") {
     `;
 
 }
-    appointmentStep = "doctor";
-
-
-    return `
-    <b>${matchedDepartment}</b><br><br>
-
-    Available doctor:
-    <br><br>
-
-    ${doctors.map(function (doctor) {
-
-        return `
-        <b>${doctor.name}</b><br>
-        ${doctor.availability}<br><br>
-        `;
-
-    }).join("")}
-
-    Which doctor would you like to see?
-    `;
-
-        }
-
 
         if (appointmentStep === "doctor") {
 
