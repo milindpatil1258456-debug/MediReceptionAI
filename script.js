@@ -505,26 +505,46 @@ function humanHelp() {
 function speak(text) {
 
     if (!("speechSynthesis" in window)) {
-
+        console.log("Text-to-Speech is not supported.");
         return;
-
     }
 
-    const cleanText =
-        text.replace(/<[^>]*>/g, "");
+    // Remove HTML if the response contains any
+    const cleanText = String(text)
+        .replace(/<[^>]*>/g, "")
+        .trim();
 
+    if (!cleanText) return;
+
+    // Stop any previous speech
     window.speechSynthesis.cancel();
 
-    const speech =
-        new SpeechSynthesisUtterance(cleanText);
+    const speech = new SpeechSynthesisUtterance(cleanText);
 
     speech.lang = "en-IN";
-
     speech.rate = 0.95;
-
     speech.pitch = 1;
+    speech.volume = 1;
 
-    window.speechSynthesis.speak(speech);
+    speech.onstart = function () {
+        console.log("MediReception AI started speaking");
+        updateVoiceStatus("🔊 Speaking...");
+    };
+
+    speech.onend = function () {
+        console.log("MediReception AI finished speaking");
+        updateVoiceStatus("🎤 Ready");
+    };
+
+    speech.onerror = function (event) {
+        console.log("Speech error:", event.error);
+        updateVoiceStatus("⚠️ Voice response unavailable");
+    };
+
+    // Small delay can help Android Chrome initialize TTS
+    setTimeout(function () {
+        window.speechSynthesis.speak(speech);
+    }, 100);
 
 }
 
