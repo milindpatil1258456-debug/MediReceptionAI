@@ -75,7 +75,19 @@ function handleEnter(event) {
     }
 
 }
+/* =====================================================
+   APPOINTMENT BOOKING STATE
+   ===================================================== */
 
+let appointmentStep = null;
+
+let appointmentData = {
+    department: "",
+    doctor: "",
+    date: "",
+    time: "",
+    name: ""
+};
 
 /* =====================================================
    AI RESPONSE ENGINE
@@ -85,7 +97,98 @@ function generateResponse(text) {
 
     const message = text.toLowerCase().trim();
 
+    /* =================================================
+       APPOINTMENT CONVERSATION
+       ================================================= */
 
+    if (appointmentStep !== null) {
+
+        const answer = text.trim();
+
+        if (appointmentStep === "department") {
+
+            appointmentData.department = answer;
+            appointmentStep = "doctor";
+
+            return `
+            📅 <b>Appointment Request</b><br><br>
+
+            Which doctor would you like to see?
+            <br><br>
+
+            You can give me the doctor's name or say
+            "any available doctor".
+            `;
+
+        }
+
+
+        if (appointmentStep === "doctor") {
+
+            appointmentData.doctor = answer;
+            appointmentStep = "date";
+
+            return `
+            👨‍⚕️ <b>Doctor noted.</b><br><br>
+
+            What date would you prefer for your appointment?
+            `;
+
+        }
+
+
+        if (appointmentStep === "date") {
+
+            appointmentData.date = answer;
+            appointmentStep = "time";
+
+            return `
+            📅 <b>Date noted.</b><br><br>
+
+            What time would you prefer?
+            `;
+
+        }
+
+
+        if (appointmentStep === "time") {
+
+            appointmentData.time = answer;
+            appointmentStep = "name";
+
+            return `
+            🕐 <b>Time noted.</b><br><br>
+
+            May I have the patient's name?
+            `;
+
+        }
+
+
+        if (appointmentStep === "name") {
+
+            appointmentData.name = answer;
+            appointmentStep = null;
+
+            return `
+            ✅ <b>Appointment Request</b><br><br>
+
+            <b>Patient:</b> ${appointmentData.name}<br>
+            <b>Department:</b> ${appointmentData.department}<br>
+            <b>Doctor:</b> ${appointmentData.doctor}<br>
+            <b>Date:</b> ${appointmentData.date}<br>
+            <b>Time:</b> ${appointmentData.time}
+
+            <br><br>
+
+            Your request has been prepared.
+            Please confirm the details with the
+            hospital reception team.
+            `;
+
+        }
+
+    }
     /* GREETING */
 
     if (
@@ -119,7 +222,7 @@ function generateResponse(text) {
 
 
     /* EMERGENCY */
-
+ 
     if (
         message.includes("emergency") ||
         message.includes("urgent") ||
@@ -263,7 +366,28 @@ function generateResponse(text) {
         `;
 
     }
+    /* =================================================
+       APPOINTMENT REQUEST
+       ================================================= */
 
+    if (
+        message.includes("appointment") ||
+        message.includes("book an appointment") ||
+        message.includes("schedule an appointment") ||
+        message.includes("book a doctor") ||
+        message.includes("see a doctor")
+    ) {
+
+        appointmentStep = "department";
+
+        return `
+        📅 <b>Appointment Request</b><br><br>
+
+        Sure! Which department would you like
+        to book an appointment for?
+        `;
+
+    }
 
     /* DOCTORS */
 
