@@ -206,10 +206,6 @@ function generateResponse(text) {
         return `
         <b>Department not found</b><br><br>
 
-        I couldn't match that to one of our departments.
-
-        <br><br>
-
         Available departments:
         <br>
         • ${hospitalData.departments.join("<br>• ")}
@@ -221,6 +217,54 @@ function generateResponse(text) {
 
     }
 
+
+    const doctors =
+        findDoctorsByDepartment(matchedDepartment);
+
+
+    if (doctors.length === 0) {
+
+        appointmentStep = null;
+
+        return `
+        <b>${matchedDepartment}</b><br><br>
+
+        I don't currently have a doctor listed for
+        this department.
+
+        <br><br>
+
+        Please contact the hospital reception team.
+        `;
+
+    }
+
+
+    appointmentData.department = matchedDepartment;
+
+    /* Automatically select the available doctor */
+
+    appointmentData.doctor = doctors[0].name;
+
+    appointmentStep = "doctor-confirmation";
+
+
+    return `
+    <b>${matchedDepartment}</b><br><br>
+
+    I found an available doctor:
+
+    <br><br>
+
+    <b>${doctors[0].name}</b><br>
+    ${doctors[0].availability}
+
+    <br><br>
+
+    Would you like to continue with this doctor?
+    `;
+
+        }
 
     appointmentData.department = matchedDepartment;
 
@@ -246,7 +290,47 @@ function generateResponse(text) {
 
     }
 
+if (appointmentStep === "doctor-confirmation") {
 
+    if (
+        answer.includes("yes") ||
+        answer.includes("yeah") ||
+        answer.includes("sure") ||
+        answer.includes("okay") ||
+        answer.includes("ok")
+    ) {
+
+        appointmentStep = "date";
+
+        return `
+        Great. What date would you prefer
+        for your appointment?
+        `;
+
+    }
+
+
+    if (
+        answer.includes("no") ||
+        answer.includes("change")
+    ) {
+
+        appointmentStep = "doctor";
+
+        return `
+        No problem. Which doctor would you prefer?
+        `;
+
+    }
+
+
+    return `
+    Please say <b>yes</b> to continue with
+    ${appointmentData.doctor}, or <b>no</b>
+    if you want to choose another doctor.
+    `;
+
+}
     appointmentStep = "doctor";
 
 
