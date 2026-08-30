@@ -1063,12 +1063,13 @@ if (SpeechRecognition) {
    START VOICE
    ===================================================== */
 
-function startVoice() {
+function startVoiceAssistant() {
+
+    alert("VOICE BUTTON WORKS");
 
     startListening();
 
 }
-
 
 /* =====================================================
    BIG VOICE ASSISTANT BUTTON
