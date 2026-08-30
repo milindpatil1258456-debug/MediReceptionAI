@@ -1071,5 +1071,84 @@ function startVoice() {
 
 /* =====================================================
    BIG VOICE ASSISTANT BUTTON
-   ===================================================== *u
+   ===================================================== */
+
+function startVoiceAssistant() {
+
+    startListening();
+
+}
+
+
+/* =====================================================
+   START LISTENING
+   ===================================================== */
+
+function startListening() {
+
+    if (!SpeechRecognition) {
+
+        updateVoiceStatus(
+            "Speech recognition is not supported."
+        );
+
+        return;
+
+    }
+
+    if (!recognition) {
+
+        updateVoiceStatus(
+            "Voice system could not start."
+        );
+
+        return;
+
+    }
+
+    if (isListening) {
+
+        recognition.stop();
+
+        return;
+
+    }
+
+    try {
+
+        updateVoiceStatus(
+            "Starting microphone..."
+        );
+
+        recognition.start();
+
+    } catch (error) {
+
+        console.log("START ERROR:", error);
+
+        updateVoiceStatus(
+            "Please tap the microphone again."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   VOICE STATUS
+   ===================================================== */
+
+function updateVoiceStatus(text) {
+
+    const status =
+        document.getElementById("voiceStatus");
+
+    if (status) {
+
+        status.innerText = text;
+
+    }
+
+}
 
