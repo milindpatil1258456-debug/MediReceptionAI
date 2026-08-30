@@ -153,54 +153,7 @@ function getDepartmentDoctorResponse(department) {
 function generateResponse(text) {
 
     const message = text.toLowerCase().trim();
-       /* =================================================
-       LANGUAGE DETECTION
-       English + Marathi + Maralish
-       ================================================= */
 
-    const marathiWords = [
-        "mala",
-        "majha",
-        "majhi",
-        "majhe",
-        "mala",
-        "pahije",
-        "havi",
-        "aahe",
-        "ahe",
-        "kay",
-        "kiti",
-        "kuthe",
-        "konta",
-        "konti",
-        "doctor",
-        "hospital",
-        "chi",
-        "cha",
-        "che",
-        "la",
-        "sathi",
-        "karaychi",
-        "karaycha",
-        "sanga",
-        "sang",
-        "dakhav",
-        "udya",
-        "aaj"
-    ];
-
-    const isMaralish =
-        marathiWords.some(function(word) {
-            return message.includes(word);
-        });
-
-    const hasMarathiScript =
-        /[\u0900-\u097F]/.test(text);
-
-    const responseLanguage =
-        (isMaralish || hasMarathiScript)
-            ? "marathi"
-            : "english";
 /* =================================================
        APPOINTMENT REQUEST
        ================================================= */
