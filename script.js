@@ -1063,9 +1063,7 @@ if (SpeechRecognition) {
    START VOICE
    ===================================================== */
 
-function startVoiceAssistant() {
-
-    alert("VOICE BUTTON WORKS");
+function startVoice() {
 
     startListening();
 
