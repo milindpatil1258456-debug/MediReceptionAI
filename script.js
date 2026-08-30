@@ -1073,3 +1073,4 @@ function startVoice() {
 /* =====================================================
    BIG VOICE ASSISTANT BUTTON
    ===================================================== *u
+console.log("MEDIRECEPTION SCRIPT LOADED");
